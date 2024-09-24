@@ -12,7 +12,7 @@ pipeline {
                 git branch: 'main', url:'https://github.com/CodeSnake-wq/SIT223_6.2hd.git'
                 
                 // Install npm dependencies
-                bat 'npm install'
+                sh 'npm install'
             }
         }
     }
