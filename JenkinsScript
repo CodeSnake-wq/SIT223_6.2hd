@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs "node"
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                // Checkout the repository
+                git 'https://github.com/CodeSnake-wq/SIT223_6.2hd.git'
+                
+                // Install npm dependencies
+                bat 'npm install'
+            }
+        }
+    }
+}
