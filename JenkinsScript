@@ -42,13 +42,13 @@ pipeline {
             steps {
                 script {
                     // Run the app in a Docker container
-                    sh 'docker run --rm -d -p 3000:80 aakash'
+                    bat 'docker run --rm -d -p 3000:80 aakash'
 
                     // Install testing dependencies
-                    sh 'npm install selenium-webdriver'
+                    bat 'npm install selenium-webdriver'
 
                     // Run the Selenium tests
-                    sh 'node tests/testApp.js'
+                    bat 'node tests/selenium.test.js'
                 }
             }
         }
