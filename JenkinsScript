@@ -28,13 +28,13 @@ pipeline {
                     bat 'npm install'
 
                     // Start the application in a new terminal
-                    bat 'start cmd /k "npm start"'
+                    bat 'start cmd /c "npm start"'
 
                     // Run Selenium tests in a separate terminal
-                    bat 'start cmd /k "node tests/selenium.test.js"'
+                    bat 'start cmd /c "node tests/selenium.test.js"'
 
-                    // Optionally, wait for a few seconds to ensure the above processes are up
-                    bat 'timeout /t 10'
+                    // Wait for a few seconds using sleep
+                    sleep(time: 10, unit: 'SECONDS')
                 }
             }
         }
