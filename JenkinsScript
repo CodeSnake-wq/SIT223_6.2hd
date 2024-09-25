@@ -23,8 +23,8 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    sh 'sudo apt install npm'
-                    sh 'npm test'
+                    bat 'npm install'
+                    bat 'npm test'
                 }
             }
         }
@@ -32,7 +32,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'npm run build'
+                    bat 'npm run build'
                 }
             }
         }
@@ -40,7 +40,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    sh 'docker build -t my-react-app:1.0 .'
+                    bat 'docker build -t my-react-app:1.0 .'
                 }
             }
         }
