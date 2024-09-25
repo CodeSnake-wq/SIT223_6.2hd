@@ -6,13 +6,43 @@ pipeline {
     }
 
     stages {
+        stage('Install Dependencies') {
+            steps {
+                echo 'Installing dependencies...'
+                sh 'npm install'
+            }
+        }
+
         stage('Build') {
             steps {
-                // Checkout the repository
-                git branch: 'main', url:'https://github.com/CodeSnake-wq/SIT223_6.2hd.git'
-                
-                // Install npm dependencies
-                sh 'npm install'
+                echo 'Building the React app...'
+                sh 'npm run build'  // Creates the production build in the /build directory
+                archiveArtifacts artifacts: 'build/**', allowEmptyArchive: true
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                sh 'npm test'  // You can add options like --ci if needed
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying the app...'
+                // Example for deploying to Firebase Hosting (replace with your deployment method)
+                sh 'npm install -g firebase-tools'
+                sh 'firebase deploy --only hosting'
+            }
+        }
+
+        stage('Release') {
+            steps {
+                echo 'Releasing the application...'
+                // This step is optional based on your release process
+                // Example: Tagging release or pushing Docker image
+                echo 'Release process goes here'
             }
         }
     }
