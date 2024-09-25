@@ -25,7 +25,6 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Running tests with npm and passing even if no tests are found
                     bat 'npm test -- --watchAll=false --passWithNoTests'
                 }
             }
