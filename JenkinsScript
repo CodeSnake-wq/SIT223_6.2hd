@@ -3,16 +3,18 @@ pipeline {
 
     environment {
         DIRECTORY_PATH = 'C:/ProgramData/Jenkins/.jenkins/workspace/Task_6.2HD'
+        NETLIFY_AUTH_TOKEN = 'nfp_tVmKvdMgKMHvuTEXVcoNWm6Tpcds9RWYd3aa'  // Replace with regenerated token
+        NETLIFY_SITE_ID = 'd72e93bf-7f3a-432b-9c5f-71adb5f72c77'  // Your Netlify site ID
     }
 
     stages {
-        stage('Declarative: Checkout SCM') {
+        stage('Checkout SCM') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Checkout') {
+        stage('Checkout Repository') {
             steps {
                 script {
                     git url: 'https://github.com/CodeSnake-wq/SIT223_6.2hd.git', branch: 'main'
@@ -20,7 +22,7 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Install Dependencies') {
             steps {
                 script {
                     bat 'npm install'
@@ -28,7 +30,7 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build Project') {
             steps {
                 script {
                     bat 'npm run build'
@@ -36,10 +38,21 @@ pipeline {
             }
         }
 
-        stage('Build Image') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    bat 'docker build -t aakash:1.0 .'
+                    bat 'docker build -t aakash1:1.0 .'
+                }
+            }
+        }
+
+        stage('Deploy to Netlify') {
+            steps {
+                script {
+                    // Deploy the app to Netlify using Docker
+                    bat """
+                    docker run --rm -v ${env.WORKSPACE}:/usr/src/app -w /usr/src/app node:14 bash -c "npm install -g netlify-cli && netlify deploy --prod --dir=build --auth=$NETLIFY_AUTH_TOKEN --site=$NETLIFY_SITE_ID"
+                    """
                 }
             }
         }
@@ -47,7 +60,15 @@ pipeline {
 
     post {
         always {
-            echo 'Pipeline completed.'
+            echo 'Pipeline execution completed.'
+        }
+        
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        
+        failure {
+            echo 'Pipeline failed. Please check logs for more details.'
         }
     }
 }
