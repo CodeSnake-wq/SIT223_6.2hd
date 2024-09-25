@@ -46,10 +46,12 @@ pipeline {
             }
         }
 
-        stage('Release to Netlify') {
+        stage('Deploy to Netlify') {
             steps {
                 script {
-                    bat 'npx netlify deploy --dir=./build --prod --auth=$NETLIFY_AUTH_TOKEN --site=$NETLIFY_SITE_ID'
+                    bat """
+                    npx netlify deploy --dir=./build --prod --auth=${NETLIFY_AUTH_TOKEN} --site=${NETLIFY_SITE_ID}
+                    """
                 }
             }
         }
