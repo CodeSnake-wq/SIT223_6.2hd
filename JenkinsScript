@@ -4,8 +4,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Check out your code from the Git repo
-                git 'https://github.com/CodeSnake-wq/SIT223_6.2hd.git'
+                // Check out the code from the main branch
+                git branch: 'main', url: 'https://github.com/CodeSnake-wq/SIT223_6.2hd.git'
             }
         }
         stage('Build') {
@@ -18,10 +18,9 @@ pipeline {
         }
         stage('Push Image') {
             steps {
-                // Push Docker image to a registry
+                // Push Docker image to a registry (if youre using one, like DockerHub)
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') 
-                    {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
                         dockerImage.push('latest')
                     }
                 }
