@@ -4,8 +4,6 @@ pipeline {
     environment {
         NETLIFY_SITE_ID = 'd72e93bf-7f3a-432b-9c5f-71adb5f72c77'
         NETLIFY_AUTH_TOKEN = 'nfp_tVmKvdMgKMHvuTEXVcoNWm6Tpcds9RWYd3aa'
-        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
-
     }
 
     stages {
@@ -23,16 +21,20 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Build Image') {
             steps {
                 script {
-                    echo "Deploying to test environment using Docker..."
-                    
-                    // Stop any existing containers
-                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} down"
-                    
-                    // Start up new containers
-                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d"
+                    bat 'docker build -t aakash:1.0 .'
+                }
+            }
+        }
+
+        stage('Deploy to Test Environment') {
+            steps {
+                script {
+                    // Deploy using Docker Compose to a staging environment
+                    bat 'docker-compose down || true'  // Stop any previous instance
+                    bat 'docker-compose up -d'         // Start the container in detached mode
                 }
             }
         }
@@ -62,13 +64,7 @@ pipeline {
             }
         }
 
-        stage('Build Image') {
-            steps {
-                script {
-                    bat 'docker build -t aakash:1.0 .'
-                }
-            }
-        }
+        
 
         stage('Deploy to Netlify') {
             steps {
