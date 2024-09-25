@@ -2,9 +2,10 @@ pipeline {
     agent any
 
     environment {
-        DIRECTORY_PATH = 'C:/ProgramData/Jenkins/.jenkins/workspace/Task_6.2HD'
         NETLIFY_SITE_ID = 'd72e93bf-7f3a-432b-9c5f-71adb5f72c77'
         NETLIFY_AUTH_TOKEN = 'nfp_tVmKvdMgKMHvuTEXVcoNWm6Tpcds9RWYd3aa'
+        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+
     }
 
     stages {
@@ -21,12 +22,17 @@ pipeline {
                 }
             }
         }
-        
-        stage('Code Quality Analysis') {
+
+        stage('Deploy') {
             steps {
                 script {
-                    // Run ESLint analysis
-                    bat 'npx eslint .'
+                    echo "Deploying to test environment using Docker..."
+                    
+                    // Stop any existing containers
+                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} down"
+                    
+                    // Start up new containers
+                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d"
                 }
             }
         }
