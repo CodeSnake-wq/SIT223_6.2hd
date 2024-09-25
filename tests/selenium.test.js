@@ -1,5 +1,6 @@
-const { Builder, By, Key, until } = require('selenium-webdriver');
+const { Builder, By, until } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
+require('chromedriver');
 
 async function runTest() {
   let options = new chrome.Options();
