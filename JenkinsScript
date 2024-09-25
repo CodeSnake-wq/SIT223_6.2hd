@@ -1,30 +1,54 @@
 pipeline {
     agent any
 
+    environment {
+        DIRECTORY_PATH = 'C:/ProgramData/Jenkins/.jenkins/workspace/Task_6.2HD'
+    }
+
     stages {
+        stage('Declarative: Checkout SCM') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Checkout') {
             steps {
-                // Check out the code from the main branch
-                git branch: 'main', url: 'https://github.com/CodeSnake-wq/SIT223_6.2hd.git'
+                script {
+                    git url: 'https://github.com/CodeSnake-wq/SIT223_6.2hd.git', branch: 'main'
+                }
             }
         }
+
         stage('Build') {
             steps {
-                // Build the Docker image
                 script {
-                    dockerImage = docker.build("react-app:latest")
+                    // Build the Docker image
+                    def app = docker.build("react-app:latest", "${DIRECTORY_PATH}")
                 }
             }
         }
-        stage('Push Image') {
+
+        stage('Install Dependencies') {
             steps {
-                // Push Docker image to a registry (if youre using one, like DockerHub)
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
-                        dockerImage.push('latest')
-                    }
+                    sh 'docker run react-app:latest npm install'
                 }
             }
+        }
+
+        stage('Build React Application') {
+            steps {
+                script {
+                    sh 'docker run react-app:latest npm run build'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed.'
         }
     }
 }
