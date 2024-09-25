@@ -20,27 +20,27 @@ pipeline {
             }
         }
 
+        stage('Test') {
+            steps {
+                script {
+                    sh 'sudo apt install npm'
+                    sh 'npm test'
+                }
+            }
+        }
+
         stage('Build') {
             steps {
                 script {
-                    // Build the Docker image
-                    def app = docker.build("react-app:latest", "${DIRECTORY_PATH}")
+                    sh 'npm run build'
                 }
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Build Image') {
             steps {
                 script {
-                    sh 'docker run react-app:latest npm install'
-                }
-            }
-        }
-
-        stage('Build React Application') {
-            steps {
-                script {
-                    sh 'docker run react-app:latest npm run build'
+                    sh 'docker build -t my-react-app:1.0 .'
                 }
             }
         }
