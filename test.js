@@ -7,14 +7,25 @@ async function runTest() {
   let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
 
   try {
-    await driver.get('http://www.google.com');
+    // Change the URL to your React app's local URL
+    await driver.get('http://localhost:3000');  // Assuming the React app runs on this port
     await driver.sleep(2000);  // Wait for 2 seconds to ensure the page is loaded
+
+    // Check if the title includes "React App"
     let title = await driver.getTitle();
-    if (title.includes('Google')) {
-      console.log('Test Passed: Title contains "Google"');
+    if (title.includes('React App')) {
+      console.log('Test Passed: Title contains "React App"');
     } else {
-      console.log('Test Failed: Title does not contain "Google"');
+      console.log('Test Failed: Title does not contain "React App"');
     }
+
+    // Verify if the Learn React link is present
+    let learnReactLink = await driver.findElement(By.linkText('Learn React'));
+    if (learnReactLink) {
+      console.log('Test Passed: "Learn React" link is present');
+    }
+  } catch (error) {
+    console.error('Test Failed:', error);
   } finally {
     await driver.quit();
   }
