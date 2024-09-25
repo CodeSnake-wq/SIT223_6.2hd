@@ -22,6 +22,23 @@ pipeline {
             }
         }
 
+        stage('Test') {
+            steps {
+                script {
+                    bat 'npm install'
+
+                    // Start the application in a new terminal
+                    bat 'start cmd /k "npm start"'
+
+                    // Run Selenium tests in a separate terminal
+                    bat 'start cmd /k "node tests/selenium.test.js"'
+
+                    // Optionally, wait for a few seconds to ensure the above processes are up
+                    bat 'timeout /t 10'
+                }
+            }
+        }
+
         stage('Build') {
             steps {
                 script {
@@ -33,22 +50,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    bat 'docker build -t aakash .'
-                }
-            }
-        }
-
-        stage('Test') {
-            steps {
-                script {
-                    // Run the app in a Docker container
-                    bat 'docker run --rm -d -p 3000:80 aakash'
-
-                    // Install testing dependencies
-                    bat 'npm install selenium-webdriver'
-
-                    // Run the Selenium tests
-                    bat 'node tests/selenium.test.js'
+                    bat 'docker build -t aakash:1.0 .'
                 }
             }
         }
