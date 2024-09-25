@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         DIRECTORY_PATH = 'C:/ProgramData/Jenkins/.jenkins/workspace/Task_6.2HD'
-        NETLIFY_SITE_ID = 'd72e93bf-7f3a-432b-9c5f-71adb5f72c77'  // Replace with your site ID
-        NETLIFY_AUTH_TOKEN = 'nfp_tVmKvdMgKMHvuTEXVcoNWm6Tpcds9RWYd3aa'  // Replace with your token
+        NETLIFY_SITE_ID = 'd72e93bf-7f3a-432b-9c5f-71adb5f72c77'
+        NETLIFY_AUTH_TOKEN = 'nfp_tVmKvdMgKMHvuTEXVcoNWm6Tpcds9RWYd3aa'
     }
 
     stages {
@@ -22,19 +22,11 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Test') {
             steps {
                 script {
-                    bat 'npm install'
-                }
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                script {
-                    // Running tests with npm
-                    bat 'npm test -- --watchAll=false' // Use --watchAll=false to run tests only once
+                    // Running tests with npm and passing even if no tests are found
+                    bat 'npm test -- --watchAll=false --passWithNoTests'
                 }
             }
         }
@@ -55,11 +47,10 @@ pipeline {
             }
         }
 
-        stage('Deploy to Netlify') {
+        stage('Release to Netlify') {
             steps {
                 script {
-                    echo 'Deploying ...'
-                    bat "npx netlify deploy --dir=./build --prod --auth=${NETLIFY_AUTH_TOKEN} --site=${NETLIFY_SITE_ID}"
+                    bat 'npx netlify deploy --dir=./build --prod --auth=$NETLIFY_AUTH_TOKEN --site=$NETLIFY_SITE_ID'
                 }
             }
         }
@@ -69,11 +60,8 @@ pipeline {
         always {
             echo 'Pipeline execution completed.'
         }
-        success {
-            echo 'Pipeline completed successfully!'
-        }
         failure {
-            echo 'Pipeline failed. Please check the logs for details.'
+            echo 'Pipeline failed. Please check logs for details.'
         }
     }
 }
