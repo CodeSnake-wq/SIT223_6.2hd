@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Check out your code from the Git repo
+                git 'https://github.com/CodeSnake-wq/SIT223_6.2hd.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                // Build the Docker image
+                script {
+                    dockerImage = docker.build("react-app:latest")
+                }
+            }
+        }
+        stage('Push Image') {
+            steps {
+                // Push Docker image to a registry
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') 
+                    {
+                        dockerImage.push('latest')
+                    }
+                }
+            }
+        }
+    }
+}
