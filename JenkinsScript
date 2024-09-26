@@ -31,7 +31,7 @@ pipeline {
 
         stage('Code Quality Analysis') {
             steps {
-                sh 'docker run --rm aakash:1.0 npm run lint'
+                bat 'docker run --rm aakash:1.0 npm run lint'
             }
         }
 
