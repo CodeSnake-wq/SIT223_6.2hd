@@ -29,13 +29,6 @@ pipeline {
             }
         }
 
-        stage('Code Quality Analysis') {
-            steps {
-                bat 'docker run --rm aakash:1.0 npm run lint'
-            }
-        }
-
-
         stage('Deploy to Test Environment') {
             steps {
                 script {

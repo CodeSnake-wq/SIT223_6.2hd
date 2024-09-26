@@ -12,8 +12,13 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.25.2",
     "@babel/eslint-parser": "^7.25.1",
+    "@babel/preset-env": "^7.25.4",
+    "@babel/preset-react": "^7.24.7",
     "@eslint/js": "^9.11.1",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^9.2.1",
     "chromedriver": "^100.0.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
