@@ -4,6 +4,8 @@ pipeline {
     environment {
         NETLIFY_SITE_ID = 'd72e93bf-7f3a-432b-9c5f-71adb5f72c77'
         NETLIFY_AUTH_TOKEN = 'nfp_tVmKvdMgKMHvuTEXVcoNWm6Tpcds9RWYd3aa'
+        SONARQUBE_URL = 'http://localhost:9000'  // The name set for your SonarQube server
+        SONARQUBE_SCANNER = 'SonarQube-Scanner'  // The name of the SonarQube scanner
     }
 
     stages {
@@ -32,7 +34,6 @@ pipeline {
         stage('Deploy to Test Environment') {
             steps {
                 script {
-                    // Deploy using Docker Compose to a staging environment
                     bat 'docker-compose down || true'  // Stop any previous instance
                     bat 'docker-compose up -d'         // Start the container in detached mode
                 }
@@ -64,7 +65,32 @@ pipeline {
             }
         }
 
-        
+        // Code Quality Analysis using SonarQube
+        stage('Code Quality Analysis') {
+            steps {
+                script {
+                    // Run SonarQube analysis
+                    withSonarQubeEnv('SonarQube-Server') {
+                        bat """
+                        ${tool 'SonarQube Scanner'}/bin/sonar-scanner \
+                        -Dsonar.projectKey=Task_6.2HD \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=${SONARQUBE_URL} \
+                        -Dsonar.login=sqp_dca8da7bbb9e545340388e58a190be3e97045107
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                // Wait for SonarQube Quality Gate result
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
 
         stage('Deploy to Netlify') {
             steps {
