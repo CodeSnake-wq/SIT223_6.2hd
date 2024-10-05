@@ -23,6 +23,7 @@ pipeline {
             }
         }
 
+        /*
         stage('Build Image') {
             steps {
                 script {
@@ -38,7 +39,7 @@ pipeline {
                     bat 'docker-compose up -d'         // Start the container in detached mode
                 }
             }
-        }
+        }*/
 
         stage('Test') {
             steps {
