@@ -73,7 +73,6 @@ pipeline {
                     // Run SonarQube analysis
                     withSonarQubeEnv('SonarQube-Server') {
                         bat """
-                        ${tool 'SonarQube Scanner'}/bin/sonar-scanner \
                         -Dsonar.projectKey=Task_6.2HD \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=${SONARQUBE_URL} \
