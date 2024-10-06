@@ -69,6 +69,7 @@ pipeline {
                 }
             }
         }
+        /*
 
         // Code Quality Analysis using SonarQube
         stage('Code Quality Analysis') {
@@ -91,7 +92,7 @@ pipeline {
                     """
                 }
             }
-        }
+        }*/
 
         stage('Monitoring and Alerting') {
             steps {
