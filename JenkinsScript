@@ -6,6 +6,7 @@ pipeline {
         NETLIFY_AUTH_TOKEN = 'nfp_tVmKvdMgKMHvuTEXVcoNWm6Tpcds9RWYd3aa'
         SONARQUBE_URL = 'http://localhost:9000'  // The name set for your SonarQube server
         SONARQUBE_SCANNER = 'SonarQube-Scanner'  // The name of the SonarQube scanner
+        DATADOG_API_KEY = '1e2c1adcabad6f79f9fdf81c915973b7'
     }
 
     tools {
@@ -87,6 +88,28 @@ pipeline {
                 script {
                     bat """
                     npx netlify deploy --dir=./build --prod --auth=${NETLIFY_AUTH_TOKEN} --site=${NETLIFY_SITE_ID}
+                    """
+                }
+            }
+        }
+
+        stage('Monitoring and Alerting') {
+            steps {
+                script {
+                    // Assuming Datadog agent and monitoring are already set up in production.
+                    echo 'Monitoring the production application using Datadog'
+                
+                    sh """
+                    curl -X POST \
+                    -H "Content-type: application/json" \
+                    -H "DD-API-KEY: ${DATADOG_API_KEY}" \
+                    -d '{
+                        "title": "Jenkins Deployment",
+                        "text": "A deployment has occurred on the production server.",
+                        "priority": "normal",
+                        "tags": ["env:production", "team:devops"]
+                        }' \
+                    https://api.datadoghq.com/api/v1/events
                     """
                 }
             }
