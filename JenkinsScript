@@ -28,19 +28,10 @@ pipeline {
             }
         }
 
-        stage('Build Image') {
+        stage('Build') {
             steps {
                 script {
                     bat 'docker build -t jenkins:1.0 .'
-                }
-            }
-        }
-
-        stage('Deploy to Test Environment') {
-            steps {
-                script {
-                    bat 'docker-compose down || true'  // Stop any previous instance
-                    bat 'docker-compose up -d'         // Start the container in detached mode
                 }
             }
         }
@@ -62,14 +53,6 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                script {
-                    bat 'npm run build'
-                }
-            }
-        }
-
         // Code Quality Analysis using SonarQube
         stage('Code Quality Analysis') {
             steps {
@@ -83,7 +66,16 @@ pipeline {
             }
         }
 
-        stage('Deploy to Netlify') {
+        stage('Deploy to Test Environment') {
+            steps {
+                script {
+                    bat 'docker-compose down || true'  // Stop any previous instance
+                    bat 'docker-compose up -d'         // Start the container in detached mode
+                }
+            }
+        }        
+
+        stage('Release to Netlify') {
             steps {
                 script {
                     bat """
