@@ -8,6 +8,10 @@ pipeline {
         SONARQUBE_SCANNER = 'SonarQube-Scanner'  // The name of the SonarQube scanner
     }
 
+    tools {
+        maven 'M3'
+    }
+
     stages {
         stage('Declarative: Checkout SCM') {
             steps {
@@ -72,7 +76,7 @@ pipeline {
             // Run SonarQube analysis
             withSonarQubeEnv('SonarQube-Server') {
                 bat """
-sonar-scanner -Dsonar.projectKey=Task_6.2HD -Dsonar.sources=. -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=sqp_dca8da7bbb9e545340388e58a190be3e97045107
+mvn sonar:sonar -Dsonar.projectKey=Task_6.2HD -Dsonar.sources=. -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=sqp_dca8da7bbb9e545340388e58a190be3e97045107
 """
 
             }
