@@ -98,22 +98,17 @@ pipeline {
                 script {
                     // Assuming Datadog agent and monitoring are already set up in production.
                     echo 'Monitoring the production application using Datadog'
-                
+
                     bat """
-                    curl -X POST \
-                    -H "Content-type: application/json" \
-                    -H "DD-API-KEY: ${DATADOG_API_KEY}" \
-                    -d '{
-                        "title": "Jenkins Deployment",
-                        "text": "A deployment has occurred on the production server.",
-                        "priority": "normal",
-                        "tags": ["env:production", "team:devops"]
-                        }' \
+                    curl -X POST -H "Content-type: application/json" ^
+                    -H "DD-API-KEY: ${DATADOG_API_KEY}" ^
+                    -d "{ \\"title\\": \\"Jenkins Deployment\\", \\"text\\": \\"A deployment has occurred on the production server.\\", \\"priority\\": \\"normal\\", \\"tags\\": [\\"env:production\\", \\"team:devops\\"] }" ^
                     https://api.datadoghq.com/api/v1/events
                     """
                 }
             }
         }
+
     }
 
     post {
