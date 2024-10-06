@@ -67,20 +67,22 @@ pipeline {
 
         // Code Quality Analysis using SonarQube
         stage('Code Quality Analysis') {
-            steps {
-                script {
-                    // Run SonarQube analysis
-                    withSonarQubeEnv('SonarQube-Server') {
-                        bat """
-                        -Dsonar.projectKey=Task_6.2HD \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=${SONARQUBE_URL} \
-                        -Dsonar.login=sqp_dca8da7bbb9e545340388e58a190be3e97045107
-                        """
-                    }
-                }
+    steps {
+        script {
+            // Run SonarQube analysis
+            withSonarQubeEnv('SonarQube-Server') {
+                bat """
+                sonar-scanner \
+                -Dsonar.projectKey=Task_6.2HD \
+                -Dsonar.sources=. \
+                -Dsonar.host.url=${SONAR_HOST_URL} \
+                -Dsonar.login=sqp_dca8da7bbb9e545340388e58a190be3e97045107
+                """
             }
         }
+    }
+}
+
 
         stage('Quality Gate') {
             steps {
